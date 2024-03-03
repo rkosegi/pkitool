@@ -111,14 +111,22 @@ func validateCa(d *createCaData) error {
 	return nil
 }
 
+func defData(w io.Writer, isCA bool) commonCreateData {
+	d := commonCreateData{
+		w:          w,
+		bits:       4096,
+		dir:        ".",
+		validYears: 1,
+	}
+	if isCA {
+		d.validYears = 2
+	}
+	return d
+}
+
 func newCaSubCommand(w io.Writer) *cobra.Command {
 	d := &createCaData{
-		commonCreateData: commonCreateData{
-			w:          w,
-			bits:       4096,
-			dir:        ".",
-			validYears: 2,
-		},
+		commonCreateData: defData(w, true),
 	}
 	cmd := &cobra.Command{
 		Use:   "ca",
@@ -140,12 +148,7 @@ func newCaSubCommand(w io.Writer) *cobra.Command {
 
 func newLeafSubCommand(w io.Writer) *cobra.Command {
 	d := &createLeafData{
-		commonCreateData: commonCreateData{
-			w:          w,
-			bits:       4096,
-			dir:        ".",
-			validYears: 2,
-		},
+		commonCreateData: defData(w, false),
 	}
 	cmd := &cobra.Command{
 		Use:   "leaf",
