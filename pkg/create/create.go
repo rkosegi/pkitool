@@ -87,8 +87,10 @@ func addDnFlags(prefix string, pm *pkix.Name, pf *pflag.FlagSet, helpSuffix stri
 	pf.StringArrayVar(&pm.Locality, prefix+"-locality", pm.Country, "Locality components of "+prefix+" DN."+helpSuffix)
 	pf.StringArrayVar(&pm.Province, prefix+"-province", pm.Province, "Province components of "+prefix+" DN."+helpSuffix)
 	pf.StringArrayVar(&pm.Country, prefix+"-country", pm.Country, "Country components of "+prefix+" DN."+helpSuffix)
+	pf.StringArrayVar(&pm.StreetAddress, prefix+"-street-address", pm.StreetAddress, "Street address components of "+prefix+" DN."+helpSuffix)
+	pf.StringArrayVar(&pm.PostalCode, prefix+"-postal-code", pm.PostalCode, "Postal code components of "+prefix+" DN."+helpSuffix)
 	pf.StringArrayVar(&pm.Organization, prefix+"-organization", pm.Organization, "Organization components of "+prefix+" DN."+helpSuffix)
-	pf.StringArrayVar(&pm.OrganizationalUnit, prefix+"-Organizational-unit", pm.OrganizationalUnit, "Organizational unit components of "+prefix+" DN."+helpSuffix)
+	pf.StringArrayVar(&pm.OrganizationalUnit, prefix+"-organizational-unit", pm.OrganizationalUnit, "Organizational unit components of "+prefix+" DN."+helpSuffix)
 	pf.StringVar(&pm.CommonName, prefix+"-common-name", pm.CommonName, "Common name components of "+prefix+" DN."+helpSuffix)
 }
 
