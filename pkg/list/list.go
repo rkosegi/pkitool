@@ -17,11 +17,12 @@ limitations under the License.
 package list
 
 import (
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/cobra"
 	"io"
 	"pkitool/pkg/certmgr"
 	"pkitool/pkg/common"
+
+	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
 )
 
 type listData struct {
@@ -36,7 +37,7 @@ func list(d *listData) error {
 		return err
 	}
 	tbl := tablewriter.NewWriter(d.w)
-	tbl.SetHeader([]string{
+	tbl.Header([]string{
 		"Subject", "Issuer", "Valid to",
 	})
 	for _, ent := range ents {
@@ -44,14 +45,13 @@ func list(d *listData) error {
 		if err != nil {
 			return err
 		}
-		tbl.Append([]string{
+		_ = tbl.Append([]string{
 			ch.Cert.Subject.String(),
 			ch.Cert.Issuer.String(),
 			ch.Cert.NotAfter.String(),
 		})
 	}
-	tbl.Render()
-	return nil
+	return tbl.Render()
 }
 
 func NewCommand(w io.Writer) *cobra.Command {

@@ -18,15 +18,17 @@ package show
 
 import (
 	"crypto/x509"
-	"github.com/olekukonko/tablewriter"
-	"github.com/samber/lo"
-	"github.com/spf13/cobra"
 	"io"
 	"pkitool/pkg/certmgr"
 	"pkitool/pkg/common"
 	"slices"
 	"strconv"
 	"strings"
+
+	"github.com/olekukonko/tablewriter"
+	"github.com/olekukonko/tablewriter/tw"
+	"github.com/samber/lo"
+	"github.com/spf13/cobra"
 )
 
 type propValueGetter func(*certmgr.PairHolder) string
@@ -136,16 +138,18 @@ func validate(d *showData) error {
 
 func showTable(ph *certmgr.PairHolder, w io.Writer) {
 	tbl := tablewriter.NewWriter(w)
-	tbl.SetHeader([]string{
+	tbl.Header([]string{
 		"Property", "Value",
 	})
-	tbl.SetAlignment(tablewriter.ALIGN_LEFT)
+	tbl.Configure(func(cfg *tablewriter.Config) {
+		cfg.Header.ColumnAligns = []tw.Align{tw.AlignLeft, tw.AlignLeft}
+	})
 	propKeys := lo.Keys(props)
 	slices.Sort(propKeys)
 	for _, e := range propKeys {
-		tbl.Append([]string{e, props[e](ph)})
+		_ = tbl.Append([]string{e, props[e](ph)})
 	}
-	tbl.Render()
+	_ = tbl.Render()
 }
 
 func show(d *showData) error {
