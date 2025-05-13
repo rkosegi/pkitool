@@ -17,7 +17,7 @@ module pkitool
 go 1.24.1
 
 require (
-	github.com/olekukonko/tablewriter v1.0.2
+	github.com/olekukonko/tablewriter v1.0.4
 	github.com/samber/lo v1.50.0
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
