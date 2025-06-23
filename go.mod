@@ -14,7 +14,7 @@
 
 module pkitool
 
-go 1.24.1
+go 1.24.2
 
 require (
 	github.com/olekukonko/tablewriter v1.0.7
