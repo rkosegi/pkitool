@@ -17,10 +17,11 @@ limitations under the License.
 package remove
 
 import (
-	"github.com/spf13/cobra"
 	"io"
 	"pkitool/pkg/certmgr"
 	"pkitool/pkg/common"
+
+	"github.com/spf13/cobra"
 )
 
 type removeData struct {

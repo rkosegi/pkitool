@@ -17,12 +17,13 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/spf13/cobra"
 	"io"
 	"pkitool/pkg/create"
 	"pkitool/pkg/list"
 	"pkitool/pkg/remove"
 	"pkitool/pkg/show"
+
+	"github.com/spf13/cobra"
 )
 
 func New(in io.Reader, out, _ io.Writer) *cobra.Command {

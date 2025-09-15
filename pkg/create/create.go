@@ -18,12 +18,13 @@ package create
 
 import (
 	"crypto/x509/pkix"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"io"
 	"net"
 	"pkitool/pkg/certmgr"
 	"pkitool/pkg/common"
+
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 type commonCreateData struct {

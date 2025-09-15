@@ -24,12 +24,13 @@ import (
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
-	"github.com/samber/lo"
 	"math/big"
 	"net"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/samber/lo"
 )
 
 const (
