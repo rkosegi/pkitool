@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ---
+version: 2
 project_name: pkitool
 release:
   github:
@@ -20,20 +21,6 @@ release:
   name_template: '{{.Tag}}'
 builds:
   - id: pkitool
-    goos:
-      - linux
-      - darwin
-      - windows
-    goarch:
-      - amd64
-      - arm64
-    goarm:
-      - "6"
-      - "7"
-    gomips:
-      - hardfloat
-    goamd64:
-      - v1
     targets:
       - linux_amd64_v1
       - linux_arm64
@@ -44,5 +31,3 @@ builds:
     dir: .
     main: main.go
     binary: pkitool
-archives:
-  - format: binary
