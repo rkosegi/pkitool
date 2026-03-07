@@ -22,9 +22,10 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"pkitool/pkg/common"
 	"strings"
 	"time"
+
+	"github.com/rkosegi/pkitool/pkg/common"
 
 	"github.com/olekukonko/errors"
 	"github.com/olekukonko/tablewriter"

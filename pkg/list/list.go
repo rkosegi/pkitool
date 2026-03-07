@@ -18,8 +18,9 @@ package list
 
 import (
 	"io"
-	"pkitool/pkg/certmgr"
-	"pkitool/pkg/common"
+
+	"github.com/rkosegi/pkitool/pkg/certmgr"
+	"github.com/rkosegi/pkitool/pkg/common"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"

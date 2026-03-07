@@ -18,8 +18,9 @@ package remove
 
 import (
 	"io"
-	"pkitool/pkg/certmgr"
-	"pkitool/pkg/common"
+
+	"github.com/rkosegi/pkitool/pkg/certmgr"
+	"github.com/rkosegi/pkitool/pkg/common"
 
 	"github.com/spf13/cobra"
 )

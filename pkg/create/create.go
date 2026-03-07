@@ -20,8 +20,9 @@ import (
 	"crypto/x509/pkix"
 	"io"
 	"net"
-	"pkitool/pkg/certmgr"
-	"pkitool/pkg/common"
+
+	"github.com/rkosegi/pkitool/pkg/certmgr"
+	"github.com/rkosegi/pkitool/pkg/common"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"

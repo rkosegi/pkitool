@@ -31,3 +31,10 @@ builds:
     dir: .
     main: main.go
     binary: pkitool
+    ldflags:
+      - -s -w
+      - -X github.com/rkosegi/pkitool/pkg/internal.Version={{.Version}}
+      - -X github.com/rkosegi/pkitool/pkg/internal.Revision={{.Commit}}
+      - -X github.com/rkosegi/pkitool/pkg/internal.Branch={{.Tag}}
+      - -X github.com/rkosegi/pkitool/pkg/internal.BuildDate={{.Date}}
+      - -X github.com/rkosegi/pkitool/pkg/internal.BuildUser={{.Env.USER}}

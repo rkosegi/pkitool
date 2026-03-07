@@ -23,10 +23,11 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"pkitool/pkg/common"
 	"slices"
 	"strings"
 	"time"
+
+	"github.com/rkosegi/pkitool/pkg/common"
 
 	"github.com/spf13/cobra"
 	"software.sslmate.com/src/go-pkcs12"

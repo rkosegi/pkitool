@@ -18,7 +18,8 @@ package certmgr
 
 import (
 	"fmt"
-	"pkitool/pkg/common"
+
+	"github.com/rkosegi/pkitool/pkg/common"
 )
 
 // function type to validate aspect of CertData

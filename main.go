@@ -18,7 +18,8 @@ package main
 
 import (
 	"os"
-	"pkitool/pkg/cmd"
+
+	"github.com/rkosegi/pkitool/pkg/cmd"
 )
 
 func main() {

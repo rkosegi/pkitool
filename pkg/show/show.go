@@ -19,11 +19,12 @@ package show
 import (
 	"crypto/x509"
 	"io"
-	"pkitool/pkg/certmgr"
-	"pkitool/pkg/common"
 	"slices"
 	"strconv"
 	"strings"
+
+	"github.com/rkosegi/pkitool/pkg/certmgr"
+	"github.com/rkosegi/pkitool/pkg/common"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/olekukonko/tablewriter/tw"

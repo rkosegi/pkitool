@@ -18,11 +18,13 @@ package cmd
 
 import (
 	"io"
-	"pkitool/pkg/create"
-	"pkitool/pkg/list"
-	"pkitool/pkg/remove"
-	"pkitool/pkg/show"
-	"pkitool/pkg/truststore"
+
+	"github.com/rkosegi/pkitool/pkg/create"
+	"github.com/rkosegi/pkitool/pkg/internal"
+	"github.com/rkosegi/pkitool/pkg/list"
+	"github.com/rkosegi/pkitool/pkg/remove"
+	"github.com/rkosegi/pkitool/pkg/show"
+	"github.com/rkosegi/pkitool/pkg/truststore"
 
 	"github.com/spf13/cobra"
 )
@@ -38,5 +40,6 @@ func New(in io.Reader, out, _ io.Writer) *cobra.Command {
 	cmd.AddCommand(list.NewCommand(out))
 	cmd.AddCommand(remove.NewCommand(out))
 	cmd.AddCommand(truststore.NewCommand(out))
+	cmd.AddCommand(internal.NewVersionCommand(out))
 	return cmd
 }

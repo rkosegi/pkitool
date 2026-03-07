@@ -18,8 +18,9 @@ package truststore
 
 import (
 	"io"
-	"pkitool/pkg/truststore/assemble"
-	"pkitool/pkg/truststore/show"
+
+	"github.com/rkosegi/pkitool/pkg/truststore/assemble"
+	"github.com/rkosegi/pkitool/pkg/truststore/show"
 
 	"github.com/spf13/cobra"
 )
