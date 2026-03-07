@@ -73,3 +73,33 @@ pkitool show --alias server2
 | Valid to                 | 2026-03-02 13:31:59 +0000 UTC                     |
 +--------------------------+---------------------------------------------------+
 ```
+
+## How about truststores?
+
+Oh yeah, those things. Supported formats are `pem-bundle` and `pkcs12`. You can browse their content or assemble new one.
+
+- Create pkcs12 truststore from 2 pem files
+
+  ```shell
+  ./dist/pkitool truststore assemble --output mystore.p12 --pem source1.pem --pem source2.pem --password superS3cret
+  Will write output to "mystore.p12"
+  Using format "pkcs12"
+  Using PKCS12 encoding "compatible"
+  Loading PEM files: source1.pem, source2.pem
+  Truststore assembled in 16.828956ms
+  ```
+  _Note: you can only add CA certificates to truststore. JKS format is not supported_
+
+
+- Show content of truststore
+
+  ```shell
+  ./dist/pkitool truststore show --file mystore.p12
+  ┌───────────────────────────────────────────┬──────────────────────┬──────────────────────┐
+  │                COMMON NAME                │      VALID FROM      │       VALID TO       │
+  ├───────────────────────────────────────────┼──────────────────────┼──────────────────────┤
+  │ DigiCert Global Root G2                   │ 2013-08-01T12:00:00Z │ 2038-01-15T12:00:00Z │
+  │ Entrust Root Certification Authority - G2 │ 2009-07-07T17:25:54Z │ 2030-12-07T17:55:54Z │
+  └───────────────────────────────────────────┴──────────────────────┴──────────────────────┘
+
+  ```

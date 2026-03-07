@@ -13,6 +13,10 @@ var (
 	ErrParentAliasMissing = errors.New("parent certificate alias is required")
 )
 
+const (
+	BlockTypeCertificate = "CERTIFICATE"
+)
+
 func AddDirFlag(d *string, pf *pflag.FlagSet) {
 	pf.StringVar(d, "directory", *d, "Directory to operate on")
 }

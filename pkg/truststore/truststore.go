@@ -1,5 +1,5 @@
 /*
-Copyright 2024 Richard Kosegi
+Copyright 2026 Richard Kosegi
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,29 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cmd
+package truststore
 
 import (
 	"io"
-	"pkitool/pkg/create"
-	"pkitool/pkg/list"
-	"pkitool/pkg/remove"
-	"pkitool/pkg/show"
-	"pkitool/pkg/truststore"
+	"pkitool/pkg/truststore/assemble"
+	"pkitool/pkg/truststore/show"
 
 	"github.com/spf13/cobra"
 )
 
-func New(in io.Reader, out, _ io.Writer) *cobra.Command {
+func NewCommand(w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
-		Short: "CLI tool to manipulate PKI objects (certificates, private keys) in directory",
-		Use:   "pkitool",
+		Use:   "truststore",
+		Short: "CA truststore operations",
 	}
-	cmd.ResetFlags()
-	cmd.AddCommand(create.NewCommand(in, out))
-	cmd.AddCommand(show.NewCommand(out))
-	cmd.AddCommand(list.NewCommand(out))
-	cmd.AddCommand(remove.NewCommand(out))
-	cmd.AddCommand(truststore.NewCommand(out))
+	cmd.AddCommand(assemble.New(w))
+	cmd.AddCommand(show.New(w))
 	return cmd
 }
