@@ -17,7 +17,7 @@ module github.com/rkosegi/pkitool
 go 1.26
 
 require (
-	github.com/olekukonko/errors v1.1.0
+	github.com/olekukonko/errors v1.2.0
 	github.com/olekukonko/tablewriter v1.1.3
 	github.com/samber/lo v1.53.0
 	github.com/spf13/cobra v1.10.2
