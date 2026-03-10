@@ -18,16 +18,13 @@ package show
 
 import (
 	"crypto/x509"
-	"encoding/pem"
-	"fmt"
 	"io"
 	"os"
-	"strings"
 	"time"
 
-	"github.com/rkosegi/pkitool/pkg/common"
+	"github.com/olekukonko/tablewriter/tw"
+	tscommon "github.com/rkosegi/pkitool/pkg/truststore/common"
 
-	"github.com/olekukonko/errors"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"software.sslmate.com/src/go-pkcs12"
@@ -39,41 +36,7 @@ type showData struct {
 	file     string
 	cas      []*x509.Certificate
 	w        io.Writer
-	dfn      decodeFn
-}
-
-type decodeFn func(data []byte, password string) ([]*x509.Certificate, error)
-
-func decodePemBundle(data []byte, _ string) (certs []*x509.Certificate, err error) {
-	for {
-		var block *pem.Block
-		block, data = pem.Decode(data)
-		if block == nil {
-			break
-		}
-		var cert *x509.Certificate
-		if block.Type == common.BlockTypeCertificate {
-			if cert, err = x509.ParseCertificate(block.Bytes); err != nil {
-				return nil, err
-			}
-			certs = append(certs, cert)
-		}
-	}
-	return certs, nil
-}
-
-func decodePkcs12(data []byte, password string) (certs []*x509.Certificate, err error) {
-	return pkcs12.DecodeTrustStore(data, password)
-}
-
-func autoDetectFormat(filename string) (decodeFn, error) {
-	if strings.HasSuffix(filename, ".pem") {
-		return decodePemBundle, nil
-	}
-	if strings.HasSuffix(filename, ".p12") || strings.HasSuffix(filename, ".pkcs12") {
-		return decodePkcs12, nil
-	}
-	return nil, fmt.Errorf("can't autodetect format: %s", filename)
+	dfn      tscommon.DecodeFn
 }
 
 func show(d *showData) error {
@@ -90,16 +53,25 @@ func show(d *showData) error {
 		return err
 	}
 
-	tbl := tablewriter.NewTable(d.w, tablewriter.WithHeader([]string{
-		"Common name", "Valid From", "Valid To",
-	}))
+	tbl := tablewriter.NewTable(d.w)
+	tbl.Configure(func(cfg *tablewriter.Config) {
+		cfg.Header.Formatting = tw.CellFormatting{
+			AutoFormat: tw.Off,
+			AutoWrap:   tw.WrapNone,
+		}
+	})
+	tbl.Header([]string{
+		"Subject friendly name",
+		"Valid From",
+		"Valid To",
+	})
 	defer func(tbl *tablewriter.Table) {
 		_ = tbl.Close()
 	}(tbl)
 
 	for _, ca := range d.cas {
 		if err = tbl.Append([]string{
-			ca.Subject.CommonName,
+			tscommon.CertFriendlyName(ca.Subject),
 			ca.NotBefore.Format(time.RFC3339),
 			ca.NotAfter.Format(time.RFC3339),
 		}); err != nil {
@@ -132,17 +104,10 @@ JKS is not supported.
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) (err error) {
 			if len(d.file) == 0 {
-				return errors.New("Path to the CA truststore is required (--file)")
+				return tscommon.ErrFileRequired
 			}
-			switch d.format {
-			case "pkcs12":
-				d.dfn = decodePkcs12
-			case "pem-bundle":
-				d.dfn = decodePemBundle
-			default:
-				if d.dfn, err = autoDetectFormat(d.file); err != nil {
-					return err
-				}
+			if d.dfn, err = tscommon.GetDecoder(d.format, d.file); err != nil {
+				return err
 			}
 			return nil
 		},

@@ -20,6 +20,7 @@ import (
 	"io"
 
 	"github.com/rkosegi/pkitool/pkg/truststore/assemble"
+	"github.com/rkosegi/pkitool/pkg/truststore/extract"
 	"github.com/rkosegi/pkitool/pkg/truststore/show"
 
 	"github.com/spf13/cobra"
@@ -32,5 +33,6 @@ func NewCommand(w io.Writer) *cobra.Command {
 	}
 	cmd.AddCommand(assemble.New(w))
 	cmd.AddCommand(show.New(w))
+	cmd.AddCommand(extract.New(w))
 	return cmd
 }
