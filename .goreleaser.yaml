@@ -21,6 +21,8 @@ release:
   name_template: '{{.Tag}}'
 builds:
   - id: pkitool
+    env:
+      - CGO_ENABLED=0
     targets:
       - linux_amd64_v1
       - linux_arm64
