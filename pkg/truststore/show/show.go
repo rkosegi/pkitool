@@ -100,7 +100,7 @@ Supported input formats:
  - pem-bundle  File is just a bunch of PEM files concatenated together.
                Password is ignored as there is no encryption involved.
 
-JKS is not supported.
+ - jks         CA certificates are stored unencrypted and integrity is validated using SHA1.
 `,
 		PreRunE: func(cmd *cobra.Command, args []string) (err error) {
 			if len(d.file) == 0 {
@@ -117,6 +117,6 @@ JKS is not supported.
 	}
 	cmd.Flags().StringVar(&d.file, "file", d.file, "path to CA truststore file (required)")
 	cmd.Flags().StringVar(&d.password, "password", d.password, "Password to use for decryption")
-	cmd.Flags().StringVar(&d.format, "format", d.format, "Output format. One of: [auto|pkcs12|pem-bundle]")
+	cmd.Flags().StringVar(&d.format, "format", d.format, "Output format. One of: [auto|pkcs12|pem-bundle|jks]")
 	return cmd
 }

@@ -18,23 +18,27 @@ package assemble
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"crypto/x509"
+	"encoding/hex"
 	"encoding/pem"
 	"fmt"
 	"io"
 	"os"
-	"slices"
+	"regexp"
 	"strings"
 	"time"
 
 	"github.com/rkosegi/pkitool/pkg/types"
 
+	jks "github.com/pavlo-v-chernykh/keystore-go/v4"
 	"github.com/spf13/cobra"
 	"software.sslmate.com/src/go-pkcs12"
 )
 
 var (
-	supportedFormats = []string{"pkcs12", "pem-bundle"}
+	supportedFormats = []string{"pkcs12", "pem-bundle", "jks"}
+	aliasSafe        = regexp.MustCompile(`[^a-z0-9]+`)
 )
 
 type data struct {
@@ -73,6 +77,40 @@ func loadPEMs(certFiles []string) ([]*x509.Certificate, error) {
 		res = append(res, cert)
 	}
 	return res, nil
+}
+
+func dummyJksAlias(cert *x509.Certificate) string {
+	hash := sha256.Sum256(cert.Raw)
+	fp := hex.EncodeToString(hash[:])[:12]
+	cn := strings.ToLower(cert.Subject.CommonName)
+	cn = aliasSafe.ReplaceAllString(cn, "-")
+	cn = strings.Trim(cn, "-")
+
+	if cn == "" {
+		cn = "cert"
+	}
+
+	return cn + "-" + fp
+}
+
+func jksEnc(certificates []*x509.Certificate, password string) ([]byte, error) {
+	var err error
+	buff := new(bytes.Buffer)
+	ks := jks.New()
+	for _, cert := range certificates {
+		alias := dummyJksAlias(cert)
+		if err = ks.SetTrustedCertificateEntry(alias, jks.TrustedCertificateEntry{
+			CreationTime: time.Now(),
+			Certificate: jks.Certificate{
+				Type:    "X509",
+				Content: cert.Raw,
+			},
+		}); err != nil {
+			return nil, err
+		}
+	}
+	err = ks.Store(buff, []byte(password))
+	return buff.Bytes(), err
 }
 
 func bundlePEMs(certificates []*x509.Certificate, _ string) ([]byte, error) {
@@ -114,7 +152,7 @@ Supported output formats:
  - pem-bundle  All certificates are concatenated into single file. This is similar to command "cat *.crt > bundle.pem".
                Password is ignored as there is no encryption involved.
 
-JKS is not supported.
+ - jks         Certificates are stored unencrypted and integrity is validated using SHA1.
 
 Supported PKCS12 encodings (--pkcs12-encoding):
 
@@ -140,10 +178,6 @@ Note: PKCS12 implementation is based on https://github.com/SSLMate/go-pkcs12
 			if len(d.certFiles) == 0 {
 				return fmt.Errorf("no CRT/PEM files provided (--pem)")
 			}
-			if !slices.Contains(supportedFormats, d.format) {
-				return fmt.Errorf("unsupported format: %q, use one of %v", d.format,
-					strings.Join(supportedFormats, ", "))
-			}
 			fmt.Fprintf(w, "Using format %q\n", d.format)
 			switch d.format {
 			case "pkcs12":
@@ -161,6 +195,8 @@ Note: PKCS12 implementation is based on https://github.com/SSLMate/go-pkcs12
 			case "pem-bundle":
 				d.encFunc = bundlePEMs
 				return nil
+			case "jks":
+				d.encFunc = jksEnc
 			default:
 				return fmt.Errorf("unsupported format: %q, use one of %v", d.format,
 					strings.Join(supportedFormats, ", "))
@@ -186,7 +222,7 @@ Note: PKCS12 implementation is based on https://github.com/SSLMate/go-pkcs12
 	}
 
 	cmd.Flags().StringVar(&d.output, "output", d.output, "Output file")
-	cmd.Flags().StringVar(&d.format, "format", d.format, "Output format (pkcs12/pem-bundle)")
+	cmd.Flags().StringVar(&d.format, "format", d.format, "Output format ["+strings.Join(supportedFormats, ", ")+"]")
 	cmd.Flags().StringSliceVar(&d.certFiles, "pem", []string{}, "CRT/PEM file to include in the truststore")
 	cmd.Flags().StringVar(&d.pkcs21EncName, "pkcs12-encoding", d.pkcs21EncName, "Name of the PKCS12 encoding to use (legacy/compatible/modern)")
 	cmd.Flags().StringVar(&d.password, "password", d.password, "Password to use for encryption")

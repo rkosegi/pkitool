@@ -17,6 +17,7 @@ limitations under the License.
 package common
 
 import (
+	"bytes"
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/pem"
@@ -24,7 +25,8 @@ import (
 	"fmt"
 	"strings"
 
-	common2 "github.com/rkosegi/pkitool/pkg/common"
+	jks "github.com/pavlo-v-chernykh/keystore-go/v4"
+	"github.com/rkosegi/pkitool/pkg/types"
 	"software.sslmate.com/src/go-pkcs12"
 )
 
@@ -42,7 +44,7 @@ func decodePemBundle(data []byte, _ string) (certs []*x509.Certificate, err erro
 			break
 		}
 		var cert *x509.Certificate
-		if block.Type == common2.BlockTypeCertificate {
+		if block.Type == types.BlockTypeCertificate {
 			if cert, err = x509.ParseCertificate(block.Bytes); err != nil {
 				return nil, err
 			}
@@ -56,6 +58,29 @@ func decodePkcs12(data []byte, password string) (certs []*x509.Certificate, err 
 	return pkcs12.DecodeTrustStore(data, password)
 }
 
+func decodeJks(data []byte, password string) (certs []*x509.Certificate, err error) {
+	buff := new(bytes.Buffer)
+	buff.Write(data)
+	ks := jks.New()
+	if err = ks.Load(buff, []byte(password)); err != nil {
+		return nil, err
+	}
+	for _, c := range ks.Aliases() {
+		if ks.IsTrustedCertificateEntry(c) {
+			var tce jks.TrustedCertificateEntry
+			if tce, err = ks.GetTrustedCertificateEntry(c); err != nil {
+				return nil, err
+			}
+			var currentCerts []*x509.Certificate
+			if currentCerts, err = x509.ParseCertificates(tce.Certificate.Content); err != nil {
+				return nil, err
+			}
+			certs = append(certs, currentCerts...)
+		}
+	}
+	return certs, nil
+}
+
 func autoDetectFormat(filename string) (DecodeFn, error) {
 	if strings.HasSuffix(filename, ".pem") {
 		return decodePemBundle, nil
@@ -63,11 +88,16 @@ func autoDetectFormat(filename string) (DecodeFn, error) {
 	if strings.HasSuffix(filename, ".p12") || strings.HasSuffix(filename, ".pkcs12") {
 		return decodePkcs12, nil
 	}
+	if strings.HasSuffix(filename, ".jks") {
+		return decodeJks, nil
+	}
 	return nil, fmt.Errorf("can't autodetect format from filename: %s", filename)
 }
 
 func GetDecoder(format, filename string) (DecodeFn, error) {
 	switch format {
+	case "jks":
+		return decodeJks, nil
 	case "pkcs12":
 		return decodePkcs12, nil
 	case "pem-bundle":

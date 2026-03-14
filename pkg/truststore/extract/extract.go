@@ -29,8 +29,8 @@ import (
 	"time"
 
 	sprig "github.com/go-task/slim-sprig"
-	"github.com/rkosegi/pkitool/pkg/types"
 	tscommon "github.com/rkosegi/pkitool/pkg/truststore/common"
+	"github.com/rkosegi/pkitool/pkg/types"
 	"github.com/samber/lo"
 	"github.com/spf13/cobra"
 	"software.sslmate.com/src/go-pkcs12"
