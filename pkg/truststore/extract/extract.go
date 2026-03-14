@@ -29,7 +29,7 @@ import (
 	"time"
 
 	sprig "github.com/go-task/slim-sprig"
-	"github.com/rkosegi/pkitool/pkg/common"
+	"github.com/rkosegi/pkitool/pkg/types"
 	tscommon "github.com/rkosegi/pkitool/pkg/truststore/common"
 	"github.com/samber/lo"
 	"github.com/spf13/cobra"
@@ -57,7 +57,7 @@ func writeCertToPem(d *exportData, cert *x509.Certificate, filename string) erro
 	full := filepath.Join(d.output, filename)
 	certPem := new(bytes.Buffer)
 	if err := pem.Encode(certPem, &pem.Block{
-		Type:  common.BlockTypeCertificate,
+		Type:  types.BlockTypeCertificate,
 		Bytes: cert.Raw,
 	}); err != nil {
 		return err

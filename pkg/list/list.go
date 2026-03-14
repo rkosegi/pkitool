@@ -20,7 +20,7 @@ import (
 	"io"
 
 	"github.com/rkosegi/pkitool/pkg/certmgr"
-	"github.com/rkosegi/pkitool/pkg/common"
+	"github.com/rkosegi/pkitool/pkg/types"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -67,6 +67,6 @@ func NewCommand(w io.Writer) *cobra.Command {
 			return list(d)
 		},
 	}
-	common.AddDirFlag(&d.dir, cmd.Flags())
+	types.AddDirFlag(&d.dir, cmd.Flags())
 	return cmd
 }

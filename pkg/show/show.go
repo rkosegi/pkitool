@@ -24,7 +24,7 @@ import (
 	"strings"
 
 	"github.com/rkosegi/pkitool/pkg/certmgr"
-	"github.com/rkosegi/pkitool/pkg/common"
+	"github.com/rkosegi/pkitool/pkg/types"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/olekukonko/tablewriter/tw"
@@ -126,13 +126,13 @@ func NewCommand(w io.Writer) *cobra.Command {
 	}
 	cmd.Flags().StringVar(&d.alias, "alias", "", "Alias of certificate to show.")
 	cmd.Flags().BoolVar(&d.tree, "tree", d.tree, "Whether to display information as a tree")
-	common.AddDirFlag(&d.dir, cmd.Flags())
+	types.AddDirFlag(&d.dir, cmd.Flags())
 	return cmd
 }
 
 func validate(d *showData) error {
 	if len(d.alias) == 0 {
-		return common.ErrAliasMissing
+		return types.ErrAliasMissing
 	}
 	return nil
 }

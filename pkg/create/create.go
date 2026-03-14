@@ -22,7 +22,7 @@ import (
 	"net"
 
 	"github.com/rkosegi/pkitool/pkg/certmgr"
-	"github.com/rkosegi/pkitool/pkg/common"
+	"github.com/rkosegi/pkitool/pkg/types"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -101,7 +101,7 @@ func addCommonFlags(d *commonCreateData, pf *pflag.FlagSet) {
 	pf.IntVar(&d.bits, "bits", d.bits, "Key size (bits), like 2048 or 4096.")
 	pf.StringVar(&d.alias, "alias", "", "Alias for new certificate. Must be unique within directory")
 	pf.IntVar(&d.validYears, "years", d.validYears, "How meany years should new certificate be valid for")
-	common.AddDirFlag(&d.dir, pf)
+	types.AddDirFlag(&d.dir, pf)
 }
 
 func validateCa(d *createCaData) error {

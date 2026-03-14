@@ -27,7 +27,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rkosegi/pkitool/pkg/common"
+	"github.com/rkosegi/pkitool/pkg/types"
 
 	"github.com/spf13/cobra"
 	"software.sslmate.com/src/go-pkcs12"
@@ -60,7 +60,7 @@ func loadPEMs(certFiles []string) ([]*x509.Certificate, error) {
 			return nil, err
 		}
 		block, _ := pem.Decode(pemBytes)
-		if block == nil || block.Type != common.BlockTypeCertificate {
+		if block == nil || block.Type != types.BlockTypeCertificate {
 			return nil, fmt.Errorf("can't load CA certificate from %q", file)
 		}
 		cert, err := x509.ParseCertificate(block.Bytes)
@@ -84,7 +84,7 @@ func bundlePEMs(certificates []*x509.Certificate, _ string) ([]byte, error) {
 	for _, cert := range certificates {
 		certPem := new(bytes.Buffer)
 		if err = pem.Encode(certPem, &pem.Block{
-			Type:  common.BlockTypeCertificate,
+			Type:  types.BlockTypeCertificate,
 			Bytes: cert.Raw,
 		}); err != nil {
 			return nil, err

@@ -19,7 +19,7 @@ package certmgr
 import (
 	"fmt"
 
-	"github.com/rkosegi/pkitool/pkg/common"
+	"github.com/rkosegi/pkitool/pkg/types"
 )
 
 // function type to validate aspect of CertData
@@ -29,7 +29,7 @@ type checkFunc func(data *CertData) error
 func requireAlias() checkFunc {
 	return func(data *CertData) error {
 		if len(data.Alias) == 0 {
-			return common.ErrAliasMissing
+			return types.ErrAliasMissing
 		}
 		return nil
 	}
@@ -39,7 +39,7 @@ func requireAlias() checkFunc {
 func requireSubject() checkFunc {
 	return func(data *CertData) error {
 		if len(data.Subject.String()) == 0 {
-			return common.ErrSubjectMissing
+			return types.ErrSubjectMissing
 		}
 		return nil
 	}
@@ -49,7 +49,7 @@ func requireSubject() checkFunc {
 func requireParentAlias() checkFunc {
 	return func(data *CertData) error {
 		if len(data.ParentAlias) == 0 {
-			return common.ErrParentAliasMissing
+			return types.ErrParentAliasMissing
 		}
 		return nil
 	}

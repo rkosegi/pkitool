@@ -20,7 +20,7 @@ import (
 	"io"
 
 	"github.com/rkosegi/pkitool/pkg/certmgr"
-	"github.com/rkosegi/pkitool/pkg/common"
+	"github.com/rkosegi/pkitool/pkg/types"
 
 	"github.com/spf13/cobra"
 )
@@ -38,7 +38,7 @@ func remove(d *removeData) error {
 
 func validate(d *removeData) error {
 	if len(d.alias) == 0 {
-		return common.ErrAliasMissing
+		return types.ErrAliasMissing
 	}
 	return nil
 }
@@ -58,7 +58,7 @@ func NewCommand(w io.Writer) *cobra.Command {
 			return remove(d)
 		},
 	}
-	common.AddDirFlag(&d.dir, cmd.Flags())
+	types.AddDirFlag(&d.dir, cmd.Flags())
 	cmd.Flags().StringVar(&d.alias, "alias", "", "Alias of certificate to show.")
 	return cmd
 }
