@@ -18,7 +18,7 @@ go 1.26
 
 require (
 	github.com/go-task/slim-sprig v2.20.0+incompatible
-	github.com/olekukonko/tablewriter v1.1.4
+	github.com/olekukonko/tablewriter v1.1.5
 	github.com/pavlo-v-chernykh/keystore-go/v4 v4.5.0
 	github.com/samber/lo v1.53.0
 	github.com/spf13/cobra v1.10.2
